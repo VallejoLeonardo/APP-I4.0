@@ -3,6 +3,8 @@ import { getConnections } from "../config/db.js";
 import { UserSchema, IUser } from "./User.js";
 import { OrdenSchema, Order } from "./Order.js";
 import { ProductoSchema, Product } from "./Product.js";
+import { MenuSchema, IMenu } from "./menu.js";
+import { RolSchema, Role } from "./Role.js";
 
 // Función para inicializar todos los modelos con sus respectivas conexiones
 export const initializeModels = () => {
@@ -20,11 +22,15 @@ export const initializeModels = () => {
     ProductoSchema,
     "productos"
   );
+  const Menu = connections.userDB.model<IMenu>("Menu", MenuSchema, "menu");
+  const Rol = connections.rolesDB.model<Role>("Role", RolSchema, "roles");
 
   return {
     User,
     Orden,
     Producto,
+    Menu,
+    Rol,
   };
 };
 

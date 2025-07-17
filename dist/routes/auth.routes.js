@@ -1,8 +1,9 @@
 import express from "express";
-import { getAllUsers, getTimeToken, login, saveUser, updateToken, updateUser, deleteUser, } from "../controllers/auth.controller.js";
+import { getAllUsers, getTimeToken, login, saveUser, updateToken, updateUser, deleteUser, verifyToken, } from "../controllers/auth.controller.js";
 const routes = express.Router();
 routes.post("/login", login);
-routes.get("/getTime", getTimeToken);
+routes.get("/time-token", getTimeToken);
+routes.get("/verify-token", verifyToken);
 routes.patch("/update/:userId", updateToken);
 routes.get("/users", getAllUsers);
 routes.post("/create", saveUser);

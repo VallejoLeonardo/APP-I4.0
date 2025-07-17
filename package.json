@@ -4,9 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "node --import tsx src/index.ts",
+    "dev:watch": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "setup:security": "node scripts/generate-secrets.js",
+    "security:check": "node scripts/security-check.js",
+    "security:deps": "node scripts/dependency-check.js",
+    "security:validate": "npm run build && node -e \"import('./dist/config/environment.js').then(m => m.validateEnvironment())\"",
+    "security:full": "npm run security:check && npm run security:deps && npm run security:validate",
+    "prestart": "npm run security:validate",
+    "postinstall": "npm run setup:security"
   },
   "keywords": [],
   "author": "",
@@ -16,22 +24,29 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.9",
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "day": "^0.0.2",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
     "js": "^0.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0",
     "morgan": "^1.10.0",
-    "node-cache": "^5.1.2"
+    "node-cache": "^5.1.2",
+    "rate-limiter-flexible": "^7.1.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.2",
+    "@types/express-validator": "^2.20.33",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.15.21",
-    "jsonwebtoken": "^9.0.2",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

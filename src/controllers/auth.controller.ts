@@ -1,5 +1,8 @@
 import express from "express";
-import { generateAccessToken } from "../utils/generateToken.js";
+import {
+  generateAccessToken,
+  verifyToken as verifyTokenUtil,
+} from "../utils/generateToken.js";
 import cache from "../utils/cache.js";
 import dayjs from "dayjs";
 import { hashPassword, verifyPassword } from "../utils/password.js";
@@ -124,7 +127,7 @@ export const saveUser = async (
       nombre,
       email,
       password: hashedPassword,
-      roles: roles || ['user'], // Use provided roles or default to ['user']
+      roles: roles || ["user"], // Use provided roles or default to ['user']
       phone,
       createdAt: Date.now(),
       status: true,
@@ -142,7 +145,7 @@ export const updateUser = async (
   res: express.Response
 ): Promise<void> => {
   const { userId } = req.params;
-  const { nombre, password, phone, roles } = req.body;
+  const { nombre, email, password, phone, roles, status } = req.body;
   const { User } = getModels();
 
   try {
@@ -157,8 +160,10 @@ export const updateUser = async (
     const updateData: any = {};
 
     if (nombre) updateData.nombre = nombre;
+    if (email) updateData.email = email;
     if (phone) updateData.phone = phone;
     if (roles) updateData.roles = roles;
+    if (status !== undefined) updateData.status = status;
 
     // Hash password if provided
     if (password) {
@@ -232,5 +237,38 @@ export const deleteUser = async (
   } catch (error) {
     console.error("Error al eliminar usuario:", error);
     res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
+export const verifyToken = (
+  req: express.Request,
+  res: express.Response
+): void => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
+
+  if (!token) {
+    res.status(401).json({ message: "Token no proporcionado" });
+    return;
+  }
+
+  try {
+    // Verificar token con la función de utilidad
+    const decoded = verifyTokenUtil(token);
+
+    // Verificar si el token está en cache
+    const ttl = cache.getTtl(decoded.userId);
+    if (!ttl || ttl <= Date.now()) {
+      res.status(401).json({ message: "Token expirado" });
+      return;
+    }
+
+    res.json({
+      valid: true,
+      userId: decoded.userId,
+      message: "Token válido",
+    });
+  } catch (error) {
+    res.status(401).json({ message: "Token inválido" });
   }
 };

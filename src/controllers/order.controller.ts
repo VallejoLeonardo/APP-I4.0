@@ -11,7 +11,11 @@ export const getAllOrders = async (
     const { Orden } = getModels();
     const { userId, status } = req.query;
 
-    const filters: any = { status: status !== "false" };
+    // Only filter by status if provided; otherwise return all orders
+    const filters: any = {};
+    if (status !== undefined) {
+      filters.status = status === "true";
+    }
     if (userId && Types.ObjectId.isValid(userId as string)) {
       filters.userId = userId;
     }
@@ -39,7 +43,7 @@ export const getOrderById = async (
     }
 
     const order = await Orden.findById(orderId);
-    if (!order || !order.status) {
+    if (!order) {
       res.status(404).json({ message: "Orden no encontrada" });
       return;
     }
