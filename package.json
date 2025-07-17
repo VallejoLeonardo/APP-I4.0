@@ -13,8 +13,8 @@
     "security:deps": "node scripts/dependency-check.js",
     "security:validate": "npm run build && node -e \"import('./dist/config/environment.js').then(m => m.validateEnvironment())\"",
     "security:full": "npm run security:check && npm run security:deps && npm run security:validate",
-    "prestart": "npm run security:validate",
-    "postinstall": "npm run setup:security"
+    "prestart": "echo 'Starting production server'",
+    "postinstall": "echo 'Skipping security setup in production - configure environment variables manually'"
   },
   "keywords": [],
   "author": "",

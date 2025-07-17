@@ -1,0 +1,23 @@
+# Railway Environment Variables Configuration
+# Copy these variables to your Railway Dashboard -> Variables section
+
+# Essential variables for Railway deployment
+NODE_ENV=production
+PORT=8080
+
+# JWT Configuration (Generate with: node -p "require('crypto').randomBytes(64).toString('hex')")
+JWT_SECRET=your-generated-jwt-secret-at-least-64-characters-long-here
+JWT_EXPIRES_IN=24h
+
+# bcrypt Configuration
+BCRYPT_SALT_ROUNDS=12
+
+# MongoDB Database URLs
+# Replace with your actual MongoDB Atlas connection strings
+USER_DB_URI=mongodb+srv://username:password@cluster.mongodb.net/user?retryWrites=true&w=majority
+ORDENES_DB_URI=mongodb+srv://username:password@cluster.mongodb.net/ordenes?retryWrites=true&w=majority
+ROLES_DB_URI=mongodb+srv://username:password@cluster.mongodb.net/roles?retryWrites=true&w=majority
+PRODUCTOS_DB_URI=mongodb+srv://username:password@cluster.mongodb.net/productos?retryWrites=true&w=majority
+
+# Optional but recommended
+CORS_ORIGIN=https://your-frontend-domain.railway.app
